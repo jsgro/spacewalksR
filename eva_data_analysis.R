@@ -1,14 +1,22 @@
+# JYS
+# 2026-3-31
+# This
+
 # https://data.nasa.gov/resource/eva.json (with modifications)
 # SARAH's repo: https://github.com/sstevens2/spacewalks
+
+# Variables to handle file names
 input_file = 'eva-data.json'
 output_file = 'eva-data.csv'
 graph_file = 'cumulative_eva_graph.png'
 
+# ALL libraries used in this script:
 library(jsonlite)
 library(lubridate)
-library(tidyverse)
-library(ggplot2)
+library(tidyverse) # needed to have ggplot2
+library(ggplot2) # redundant with above command
 
+# Input data from file using variable
 j_l <- read_json(input_file)
 data=as.data.frame(j_l[[1]])
 
@@ -20,8 +28,6 @@ for( i in 2:374){
 #data.pop(0)
 ## Comment out this bit if you don't want the spreadsheet
 write.csv(output_file)
-
-
 
 time <- c()
 date = Date()
@@ -67,25 +73,30 @@ time <- df$time
 # needed ffor ggplot2
 cumulative_time <- duration_dt[2:length(duration_dt)]
 
-png(graph_file)
-plot(date,duration_dt[2:length(duration_dt)],
-xlab = 'Year', ylab= 'Total time spent in space to date (hours)'
-)
-dev.off()
-plot(date,duration_dt[2:length(duration_dt)],
-xlab = 'Year', ylab= 'Total time spent in space to date (hours)'
-)
+# THe section commented out after adding ggplot version
+# using BLOCK COMMENT option
+# using: SHIFT + COMMAND + C
+# png(graph_file)
+# plot(date,duration_dt[2:length(duration_dt)],
+# xlab = 'Year', ylab= 'Total time spent in space to date (hours)'
+# )
+# dev.off()
+# plot(date,duration_dt[2:length(duration_dt)],
+# xlab = 'Year', ylab= 'Total time spent in space to date (hours)'
+# )
 
 # switch to ggplot2 
-
+# step 1: create plot using cumulative time computed above:
 cumulative_spacetime_plot <- ggplot(df, aes(x = date, y = cumulative_time)) +  
   geom_point() +  
   geom_line() +  
   labs(x = "Year",y = "Total time spent in space to date (hours)"  ) + 
   theme_minimal()
 
+# Save plot to PNG file (default format) 
 ggsave(graph_file, plot = cumulative_spacetime_plot, width = 9, height = 5, dpi = 300)
 
+# Show plot to the Live interactive Plots tab
 print(cumulative_spacetime_plot)
 
 
